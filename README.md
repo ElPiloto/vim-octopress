@@ -11,9 +11,12 @@
 Using the `:Octopress` command, you can create new posts, regenerate your
 output files, and even deploy to your server.
 
-NOTE: At this time, live preview mode is not supported, due to limitations in
-how Vim handles background processes.  It is not expected that this support
-will be added unless Octopress significantly redesigns the preview mode.
+NOTE: At this time, ~~live preview mode is not supported~~ works if you have
+a system that can run pgrep and install tpope's 
+[vim-dispatch](https://github.com/tpope/vim-dispatch) plugin installed, due 
+to limitations in how Vim handles background processes.  It is not expected 
+that this support will be added unless Octopress significantly redesigns the
+preview mode. 
 
 If you use [Pathogen][] (and you really should):
 

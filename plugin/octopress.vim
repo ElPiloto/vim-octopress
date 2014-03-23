@@ -40,14 +40,34 @@ function! s:Octopress(task, ...)
 			execute ':edit ' . rakefile_path . '/' . post_path
 		endif
 	" TODO add task new_page
-	elseif a:task ==# 'watch' || a:task ==# 'preview'
-		echo 'Sorry, background tasks are not supported.'
-		return
 	elseif a:task ==# 'generate' || a:task ==# 'deploy' || a:task ==# 'gen_deploy' || a:task ==# 'push' || a:task ==# 'rsync' || a:task ==# 'clean'
 		if a:task ==# 'deploy' || a:task ==# 'gen_deploy' || a:task ==# 'rsync'
 			execute 'set noswapfile'
 		endif
 		execute '!' . g:octopress_rake_executable . ' ' . a:task
+	elseif a:task ==# 'preview'
+		if g:octopress_allow_bg
+			" only execute rake preview if it isn't already running
+			if !system("pgrep -f '^ruby.*rake preview'")
+				execute ':Start! ' . g:octopress_rake_executable . ' preview'
+			else
+				echo 'rake preview is already running'
+			endif
+		else
+			echo "Dispatch plugin (tpope/vim-dispatch @ git) not detected, cannot launch rake preview"
+		endif
+	elseif a:task ==# 'watch'
+		if g:octopress_allow_bg
+			" only execute rake preview if it isn't already running
+			if !system("pgrep -f '^ruby.*rake watch'")
+				execute ':Start! ' . g:octopress_rake_executable . ' watch'
+			else
+				echo 'rake watch is already running'
+			endif
+		else
+			echo "Dispatch plugin (tpope/vim-dispatch @ git) not detected, cannot launch rake watch"
+		endif
+
 	else
 		echo "I don't know about that Octopress task."
 	endif
@@ -55,7 +75,11 @@ function! s:Octopress(task, ...)
 endfunction
 
 function! s:Complete(ArgLead, CmdLine, CursorPos)
-	return "new_post\nclean\ndeploy\ngen_deploy\ngenerate\npush\nrsync\n"
+	if g:octopress_allow_bg == 0
+		return "new_post\nclean\ndeploy\ngen_deploy\ngenerate\npush\nrsync\n"
+	else
+		return "new_post\nclean\ndeploy\ngen_deploy\ngenerate\npush\nrsync\npreview\nwatch"
+	endif
 endfunction
 
 command! -bang -nargs=* -complete=custom,s:Complete Octopress call s:Octopress(<f-args>)

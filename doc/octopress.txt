@@ -60,6 +60,8 @@ The :Octopress command
     push         Deploy to GitHub Pages
     rsync        Deploy via rsync
     clean        Clean caches (pygments, gist, sass)
+	watch        Launch rake watch*
+	preview      Launch rake preview*
 
 new_post is the only command that takes arguments. The rest of the line
 after ':Octopress new_post' is considered to be the post title.
@@ -71,6 +73,9 @@ issue using the raw Octopress commands outside of Vim also.
 
 imathis says this will not be a problem when they move to a CLI instead of
 using rake.
+
+* Note: watch and preview only work if you're on a *nix system (requires pgrep
+command) with tpope's vim-dispatch plugin installed.
 
                                                  *g:octopress_rake_executable*
 By default, 'rake' is taken from your path. If you want to use a different
